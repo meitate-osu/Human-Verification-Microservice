@@ -1,41 +1,32 @@
-const http = require('node:http');
+const express = require('express');
+const fs = require('fs');
 
-const hostname = '127.0.0.1';
-const port = 3001;
+const app = express();
+const HOST = '127.0.0.1';
+const PORT = 3001;
 
-// const server = http.createServer((req, res) => {
-//   res.statusCode = 200;
-//   res.setHeader('Content-Type', 'text/plain');
-//   res.end('Hello, World!\n');
-// });
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-var express = require('express');   // We are using the express library for the web server
-var app     = express();            // We need to instantiate an express object to interact with the server in our code
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
-//app.use(express.static(path.join(__dirname, 'public')));        //Added this to fix Captcha error (Ian)
-app.use(express.static('public'))
-
-const path = require("path");
-const fs = require("fs");
-
-
-fs.watch('example.txt', (eventType, filename) => {
-    if (eventType === 'change') {
+function handleFileChange() {
+    try {
         const data = fs.readFileSync('example.txt', 'utf8');
+
         if (data === 'verify') {
-            fs.writeFile('example.txt', 'verified', (err) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).send('Error writing to file');
-                    }
-                })
+            fs.writeFileSync('example.txt', 'verified');
         }
+    } catch (err) {
+        console.error('File processing error:', err);
     }
+}
 
-})
+fs.watch('example.txt', (eventType) => {
+    if (eventType === 'change') {
+        handleFileChange();
+    }
+});
 
-
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(PORT, HOST, () => {
+    console.log(`Server running at http://${HOST}:${PORT}/`);
 });
