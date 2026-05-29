@@ -1,0 +1,38 @@
+
+&nbsp;
+&nbsp;
+
+<div class="container">
+        <h2>Human Verification Test</h2>
+        <form class='uploader' method="post" enctype="multipart/form-data" action="/upload">
+            <input id="submit" type="submit" class='submit' value="Submit">
+        </form>
+        <button id="humanity" type="humanity" class="humanity">I am not a bot</button>
+
+</div>
+
+<script>
+    document.getElementById('humanity').addEventListener('click', async () => {
+        const write = await fetch('/write-to-file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ textData: "verify" })
+        });
+        const result = await write.text();
+        alert('verification successful');
+        try {
+            // Request the file data from the Node.js endpoint
+            const read = await fetch('read-file');
+            const text = await read.text();
+
+            if (text == 'verified') {
+                submit.classList.add("open-submit")
+                humanity.classList.remove("open-humanity")
+            }
+            
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    });
+</script>
