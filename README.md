@@ -72,6 +72,6 @@ If there is an error in the process of the microservice writing into the txt fil
 return res.status(500).send('Error writing to file');
 ```
 
-##UML Sequence Diagram
+## UML Sequence Diagram
 
 <img width="960" height="720" alt="Untitled drawing" src="https://github.com/user-attachments/assets/6d6ef80a-9b25-46d4-adc6-a379131484ac" />
